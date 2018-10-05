@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-sm">
+    <div class="card" style="width: 14rem;">
+      <img class="card-img-top" src="{% static 'images/ikona_192.png' %}" alt="Portfolio">
+      <div class="card-body">
+        <p class="card-text">Check how much your portfolio is worth</p>
+        <h5 class="card-title">
+          <a href="{% url 'about' %}" class="btn btn-outline-primary">My portfolio</a>
+        </h5>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm">
+    <div class="card" style="width: 14rem;">
+      <img class="card-img-top" src="{% static 'images/ikona_192.png' %}" alt="Dividends">
+      <div class="card-body">
+        <p class="card-text">Check how much dividends you received</p>
+        <h5 class="card-title"><a href="{% url 'about' %}" class="btn btn-outline-primary">My dividendes</a></h5>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm">
+    <div class="card" style="width: 14rem;">
+      <img class="card-img-top" src="{% static 'images/ikona_192.png' %}" alt="History">
+      <div class="card-body">
+        <p class="card-text">Check history porfolio</p>
+        <h5 class="card-title"><a href="{% url 'about' %}" class="btn btn-outline-primary">My historic portfolio</a></h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

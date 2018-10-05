@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %} Stocks {% endblock %}
+
+{% block content %}
+
+<h1>
+Stocks
+<small class="text-muted"><a href="{% url 'add_stock' %}">add new</a></small>
+</h1>
+<br/>
+{% if stocks_list %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Code</th>
+                <th scope="col">Name</th>
+                <th scope="col">Last modified</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for stock in stocks_list %}        
+            <tr>
+                <th scope="row">{{ stock.id }}</th>
+                <td>{{ stock.code }}</td>
+                <td>{{ stock.name }}</td>
+                <td>{{ stock.updated_date_time }}</td>
+                <td><a class="fa fa-pencil" href="{% url 'edit_stock' id=stock.id %}"></a></td>
+                <td><a class="fa fa-trash" href="{% url 'delete_stock' id=stock.id %}"></a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>There are no stocks.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %} Tags {% endblock %}
+
+{% block content %}
+
+<h1>
+Tags
+<small class="text-muted"><a href="{% url 'add_tag' %}">add new</a></small>
+</h1>
+<br/>
+{% if tags_list %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Last modified</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tag in tags_list %}        
+            <tr>
+                <th scope="row">{{ tag.id }}</th>
+                <td>{{ tag.name }}</td>
+                <td>{{ tag.description }}</td>
+                <td>{{ tag.updated_date_time }}</td>
+                <td><a class="fa fa-pencil" href="{% url 'edit_tag' id=tag.id %}"></a></td>
+                <td><a class="fa fa-trash" href="{% url 'delete_tag' id=tag.id %}"></a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% else %}
+    <p>There are no tags.</p>
+{% endif %}
+
+{% endblock %}
