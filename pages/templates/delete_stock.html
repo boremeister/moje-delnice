@@ -6,18 +6,21 @@
 {% block content %}
 
 <div class="row">
-    <div class="col">
-    </div>
-    <div class="col-5">
-      <h1>Delete stock</h1>
-      <form method="post" novalidate>
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-danger">Delete</button>
-      </form>
-    </div>
-    <div class="col">
-    </div>
+  <div class="col">
   </div>
+  <div class="col-5">
+    <h1>Delete stock</h1>
+    <br/>
+    <form method="post" novalidate> 
+      {% csrf_token %}
+      <p>Do you realy want to delete stock <i><strong>{{ stock.name }}</strong></i>?</p>
+      <br/>
+      <button type="submit" class="btn btn-danger">Delete</button>
+      <button onclick="window.history.back();" class="btn btn-default" type="button">Cancel</button>
+    </form>
+  </div>
+  <div class="col">
+  </div>
+</div> 
 
 {% endblock %}

@@ -75,14 +75,10 @@ def delete_stock(request, id = None):
     stock = get_object_or_404(Stock, id = id)
 
     if request.method == "POST":
-        form = StockForm(request.POST, instance = stock)
-        if form.is_valid():
-            stock.delete()
-            return redirect('stocks')
-    else:
-        form = StockForm(instance = stock)
-    
-    return render(request, "delete_stock.html", {'form': form})
+        stock.delete()
+        return redirect('stocks')
+    else:   
+        return render(request, "delete_stock.html", {'stock': stock})
 
 # currencies
 def currencies(request):
@@ -129,14 +125,10 @@ def delete_currency(request, id = None):
     currency = get_object_or_404(Currency, id = id)
 
     if request.method == "POST":
-        form = CurrencyForm(request.POST, instance = currency)
-        if form.is_valid():
-            currency.delete()
-            return redirect('currencies')
+        currency.delete()
+        return redirect('currencies')
     else:
-        form = CurrencyForm(instance = currency)
-    
-    return render(request, "delete_currency.html", {'form': form})
+        return render(request, "delete_currency.html", {'currency': currency})
 
 # tags
 def tags(request):
