@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Delete stock price{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col">
+  </div>
+  <div class="col-5">
+    <h1>Delete stock price</h1>
+    <br/>
+    <form method="post" novalidate> 
+      {% csrf_token %}
+      <p>Do you realy want to delete stock price for stock <i><strong>{{ stockprice.stock }}</strong></i> for <i><strong>{{ stockprice.date }}</strong></i>?</p>
+      <br/>
+      <button type="submit" class="btn btn-danger">Delete</button>
+      <button onclick="window.history.back();" class="btn btn-default" type="button">Cancel</button>
+    </form>
+  </div>
+  <div class="col">
+  </div>
+</div> 
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %} Stock prices {% endblock %}
+
+{% block content %}
+
+<h1>
+Stock prices
+<small class="text-muted"><a href="{% url 'add_stockprice' %}">add new stock price</a></small>
+</h1>
+<br/>
+{% if stockprices_list %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Price</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Date</th>
+                <th scope="col">Last modified</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for stockprice in stockprices_list %}        
+            <tr>
+                <th scope="row">{{ stockprice.id }}</th>
+                <td>{{ stockprice.stock.code }}</td>
+                <td>{{ stockprice.price }}</td>
+                <td>{{ stockprice.currency }}</td>
+                <td>{{ stockprice.date }}</td>
+                <td>{{ stockprice.updated_date_time }}</td>
+                <td><a class="fa fa-pencil" href="{% url 'edit_stockprice' id=stockprice.id %}"></a></td>
+                <td><a class="fa fa-trash" href="{% url 'delete_stockprice' id=stockprice.id %}"></a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>There are no stock prices.</p>
+{% endif %}
+{% endblock %}

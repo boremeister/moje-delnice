@@ -1,19 +1,8 @@
 from django.shortcuts import render, get_object_or_404
-from . models import Currency, Stock, Tag
+from . models import Currency, Stock, Tag, StockPrice
 from django.http import HttpResponse
-from . forms import TagForm, StockForm, CurrencyForm
+from . forms import StockForm, CurrencyForm, TagForm, StockPriceForm
 from django.shortcuts import redirect
-
-from bootstrap_modal_forms.mixins import PassRequestMixin
-from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy
-from django.views import generic
-
-class TagDeleteView(PassRequestMixin, SuccessMessageMixin,generic.CreateView):
-    template_name = 'delete_tag.html'
-    form_class = TagForm
-    success_message = 'Success: Tag was deleted.'
-    success_url = reverse_lazy('tags')
 
 def home(request):
     return render(request, "home.html", {})
@@ -21,8 +10,55 @@ def home(request):
 def login(request):
     return render(request, "registration/login.html", {})
 
+# stock prices
 def stockprices(request):
-    return render(request, "stockprices.html", {})
+
+    all_stockprices = StockPrice.objects.all()
+    context = {
+        'stockprices_list': all_stockprices
+    }
+
+    return render(request, "stockprices/stockprices.html", context)
+
+def add_stockprice(request):
+
+    if request.method == "POST":
+        form = StockPriceForm(request.POST)
+        if form.is_valid():
+            stockprice = form.save(commit=False)
+            stockprice.created_by = request.user
+            stockprice.save()
+            return redirect('stockprices')
+    else:
+        form = StockPriceForm()
+    
+    return render(request, "stockprices/add_stockprice.html", {'form': form})
+
+def edit_stockprice(request, id = None):
+
+    stockprice = get_object_or_404(StockPrice, id = id)
+
+    if request.method == "POST":
+        form = StockPriceForm(request.POST, instance = stockprice)
+        if form.is_valid():
+            stockprice = form.save(commit=False)
+            #stockprice.created_by = request.user
+            stockprice.save()
+            return redirect('stockprices')
+    else:
+        form = StockPriceForm(instance = stockprice)
+    
+    return render(request, "stockprices/edit_stockprice.html", {'form': form})
+
+def delete_stockprice(request, id = None):
+
+    stockprice = get_object_or_404(StockPrice, id = id)
+
+    if request.method == "POST":
+        stockprice.delete()
+        return redirect('stockprices')
+    else:   
+        return render(request, "stockprices/delete_stockprice.html", {'stockprice': stockprice})
 
 def exchangerates(request):
     return render(request, "exchangerates.html", {})
@@ -38,7 +74,7 @@ def stocks(request):
         'stocks_list': all_stocks
     }
 
-    return render(request, "stocks.html", context)
+    return render(request, "stocks/stocks.html", context)
 
 def add_stock(request):
 
@@ -52,7 +88,7 @@ def add_stock(request):
     else:
         form = StockForm()
     
-    return render(request, "add_stock.html", {'form': form})
+    return render(request, "stocks/add_stock.html", {'form': form})
 
 def edit_stock(request, id = None):
 
@@ -62,13 +98,13 @@ def edit_stock(request, id = None):
         form = StockForm(request.POST, instance = stock)
         if form.is_valid():
             stock = form.save(commit=False)
-            stock.created_by = request.user
+            #stock.created_by = request.user
             stock.save()
             return redirect('stocks')
     else:
         form = StockForm(instance = stock)
     
-    return render(request, "edit_stock.html", {'form': form})
+    return render(request, "stocks/edit_stock.html", {'form': form})
 
 def delete_stock(request, id = None):
 
@@ -78,7 +114,7 @@ def delete_stock(request, id = None):
         stock.delete()
         return redirect('stocks')
     else:   
-        return render(request, "delete_stock.html", {'stock': stock})
+        return render(request, "stocks/delete_stock.html", {'stock': stock})
 
 # currencies
 def currencies(request):
@@ -88,7 +124,7 @@ def currencies(request):
         'currencies_list': all_currencies
     }
 
-    return render(request, "currencies.html", context)
+    return render(request, "currencies/currencies.html", context)
 
 def add_currency(request):
 
@@ -102,7 +138,7 @@ def add_currency(request):
     else:
         form = CurrencyForm()
     
-    return render(request, "add_currency.html", {'form': form})
+    return render(request, "currencies/add_currency.html", {'form': form})
 
 def edit_currency(request, id = None):
 
@@ -112,13 +148,13 @@ def edit_currency(request, id = None):
         form = CurrencyForm(request.POST, instance = currency)
         if form.is_valid():
             currency = form.save(commit=False)
-            currency.created_by = request.user
+            #currency.created_by = request.user
             currency.save()
             return redirect('currencies')
     else:
         form = CurrencyForm(instance = currency)
     
-    return render(request, "edit_currency.html", {'form': form})
+    return render(request, "currencies/edit_currency.html", {'form': form})
 
 def delete_currency(request, id = None):
 
@@ -128,7 +164,7 @@ def delete_currency(request, id = None):
         currency.delete()
         return redirect('currencies')
     else:
-        return render(request, "delete_currency.html", {'currency': currency})
+        return render(request, "currencies/delete_currency.html", {'currency': currency})
 
 # tags
 def tags(request):
@@ -138,7 +174,7 @@ def tags(request):
         'tags_list': all_tags
     }
 
-    return render(request, "tags.html", context)
+    return render(request, "tags/tags.html", context)
 
 def add_tag(request):
 
@@ -152,7 +188,7 @@ def add_tag(request):
     else:
         form = TagForm()
     
-    return render(request, "add_tag.html", {'form': form})
+    return render(request, "tags/add_tag.html", {'form': form})
 
 def edit_tag(request, id = None):
 
@@ -162,13 +198,13 @@ def edit_tag(request, id = None):
         form = TagForm(request.POST, instance = tag)
         if form.is_valid():
             tag = form.save(commit=False)
-            tag.created_by = request.user
+            #tag.created_by = request.user
             tag.save()
             return redirect('tags')
     else:
         form = TagForm(instance = tag)
     
-    return render(request, "edit_tag.html", {'form': form})
+    return render(request, "tags/edit_tag.html", {'form': form})
 
 def delete_tag(request, id = None):
 
@@ -178,7 +214,7 @@ def delete_tag(request, id = None):
         tag.delete()
         return redirect('tags')
     else:
-        return render(request, "delete_tag.html", {'tag': tag})
+        return render(request, "tags/delete_tag.html", {'tag': tag})
 
 def users(request):
     return render(request, "users.html", {})

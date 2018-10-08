@@ -8,6 +8,10 @@ urlpatterns = [
     path('login/', views.login, name='login'),
 
     path('stockprices/', views.stockprices, name='stockprices'),
+    path('stockprices/add', views.add_stockprice, name='add_stockprice'),
+    path('stockprices/edit/<int:id>', views.edit_stockprice, name='edit_stockprice'),
+    path('stockprices/delete/<int:id>', views.delete_stockprice, name='delete_stockprice'),
+
     path('exchangerates/', views.exchangerates, name='exchangerates'),
     path('transactions/', views.transactions, name='transactions'),
     
