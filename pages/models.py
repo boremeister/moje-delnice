@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+import datetime
 
 # stocks
 class Stock(models.Model):
@@ -33,6 +34,23 @@ class Currency(models.Model):
     def __str__(self):
         return self.code
 
+# exchange rates
+class ExchangeRate(models.Model):
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
+    rate = models.DecimalField(max_digits=10, decimal_places=5)
+    date = models.DateField()
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_date_time = models.DateTimeField(auto_now_add=True)
+    updated_date_time = models.DateTimeField(auto_now=True)
+
+    # define table name
+    class Meta:
+      db_table = "exchange_rates"
+
+    # show field in admin site
+    def __str__(self):
+        return (self.currency.code + " - " + self.date.strftime('%Y-%m-%d'))
+
 # dividends
 class Dividende(models.Model):
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
@@ -49,7 +67,7 @@ class Dividende(models.Model):
 
     # show field in admin site
     def __str__(self):
-        return (self.stock + " - " + self.date)
+        return (self.stock + " - " + self.date.strftime('%Y-%m-%d'))
 
 # stock prices
 class StockPrice(models.Model):
@@ -67,7 +85,7 @@ class StockPrice(models.Model):
 
     # show field in admin site
     def __str__(self):
-        return (self.stock + " - " + self.date)
+        return (self.stock + " - " + self.date.strftime('%Y-%m-%d'))
 
 # tags
 class Tag(models.Model):
@@ -111,4 +129,4 @@ class Transaction(models.Model):
 
       # show field in admin site
     def __str__(self):
-        return (self.transaction_type + " - " + self.stock + " - " + self.date)
+        return (self.transaction_type + " - " + self.stock + " - " + self.date.strftime('%Y-%m-%d'))

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %} Exchange rates {% endblock %}
+
+{% block content %}
+
+<h1>
+Exchange rates
+<small class="text-muted"><a href="{% url 'add_exchangerate' %}">add new exchange rate</a></small>
+</h1>
+<br/>
+{% if exchangerates_list %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Rate</th>
+                <th scope="col">Date</th>
+                <th scope="col">Last modified</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for exchangerate in exchangerates_list %}        
+            <tr>
+                <th scope="row">{{ exchangerate.id }}</th>
+                <td>{{ exchangerate.currency.code }}</td>
+                <td>{{ exchangerate.rate }}</td>
+                <td>{{ exchangerate.date }}</td>
+                <td>{{ exchangerate.updated_date_time }}</td>
+                <td><a class="fa fa-pencil" href="{% url 'edit_exchangerate' id=exchangerate.id %}"></a></td>
+                <td><a class="fa fa-trash" href="{% url 'delete_exchangerate' id=exchangerate.id %}"></a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>There are no exchange rates.</p>
+{% endif %}
+
+{% endblock %}

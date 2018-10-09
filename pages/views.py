@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
-from . models import Currency, Stock, Tag, StockPrice
+from . models import Currency, Stock, Tag, StockPrice, ExchangeRate
 from django.http import HttpResponse
-from . forms import StockForm, CurrencyForm, TagForm, StockPriceForm
+from . forms import StockForm, CurrencyForm, TagForm, StockPriceForm, ExchangeRateForm
 from django.shortcuts import redirect
+import datetime
 
 def home(request):
     return render(request, "home.html", {})
@@ -30,7 +31,9 @@ def add_stockprice(request):
             stockprice.save()
             return redirect('stockprices')
     else:
-        form = StockPriceForm()
+        # preset date field to current date
+        now = datetime.datetime.now()
+        form = StockPriceForm(initial={'date':now.strftime("%Y-%m-%d")})
     
     return render(request, "stockprices/add_stockprice.html", {'form': form})
 
@@ -60,9 +63,58 @@ def delete_stockprice(request, id = None):
     else:   
         return render(request, "stockprices/delete_stockprice.html", {'stockprice': stockprice})
 
+# exchange rates
 def exchangerates(request):
-    return render(request, "exchangerates.html", {})
 
+    all_exchangerates = ExchangeRate.objects.all()
+    context = {
+        'exchangerates_list': all_exchangerates
+    }
+
+    return render(request, "exchangerates/exchangerates.html", context)
+
+def add_exchangerate(request):
+
+    if request.method == "POST":
+        form = ExchangeRateForm(request.POST)
+        if form.is_valid():
+            exchangerate = form.save(commit=False)
+            exchangerate.created_by = request.user
+            exchangerate.save()
+            return redirect('exchangerates')
+    else:
+        # preset date field to current date
+        now = datetime.datetime.now()
+        form = ExchangeRateForm(initial={'date':now.strftime("%Y-%m-%d")})
+    
+    return render(request, "exchangerates/add_exchangerate.html", {'form': form})
+
+def edit_exchangerate(request, id = None):
+
+    exchangerate = get_object_or_404(ExchangeRate, id = id)
+
+    if request.method == "POST":
+        form = ExchangeRateForm(request.POST, instance = exchangerate)
+        if form.is_valid():
+            exchangerate = form.save(commit=False)
+            exchangerate.save()
+            return redirect('exchangerates')
+    else:
+        form = ExchangeRateForm(instance = exchangerate)
+    
+    return render(request, "exchangerates/edit_exchangerate.html", {'form': form})
+
+def delete_exchangerate(request, id = None):
+
+    exchangerate = get_object_or_404(ExchangeRate, id = id)
+
+    if request.method == "POST":
+        exchangerate.delete()
+        return redirect('exchangerates')
+    else:   
+        return render(request, "exchangerates/delete_exchangerate.html", {'exchangerate': exchangerate})
+
+# transactions
 def transactions(request):
     return render(request, "transactions.html", {})
 

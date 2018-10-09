@@ -1,5 +1,5 @@
 from django import forms
-from . models import Tag, Stock, Currency, StockPrice
+from . models import Tag, Stock, Currency, StockPrice, ExchangeRate
 
 class StockForm(forms.ModelForm):
 
@@ -24,3 +24,9 @@ class StockPriceForm(forms.ModelForm):
     class Meta:
         model = StockPrice
         fields = ('stock', 'price', 'currency', 'date')
+
+class ExchangeRateForm(forms.ModelForm):
+
+    class Meta:
+        model = ExchangeRate
+        fields = ('currency', 'rate', 'date')
