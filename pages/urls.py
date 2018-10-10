@@ -21,6 +21,12 @@ urlpatterns = [
     path('exchangerates/edit/<int:id>', views.edit_exchangerate, name='edit_exchangerate'),
     path('exchangerates/delete/<int:id>', views.delete_exchangerate, name='delete_exchangerate'),
 
+    # dividendes
+    path('dividends/', views.dividends, name='dividends'),
+    path('dividends/add', views.add_dividend, name='add_dividend'),
+    path('dividends/edit/<int:id>', views.edit_dividend, name='edit_dividend'),
+    path('dividends/delete/<int:id>', views.delete_dividend, name='delete_dividend'),
+
     # transactions
     path('transactions/', views.transactions, name='transactions'),
     

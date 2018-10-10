@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %} Dividends {% endblock %}
+
+{% block content %}
+
+<h1>
+Dividends
+<small class="text-muted"><a href="{% url 'add_dividend' %}">add new</a></small>
+</h1>
+<br/>
+{% if dividends_list %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Value</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Date</th>
+                <th scope="col">Last modified</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for dividend in dividends_list %}        
+            <tr>
+                <th scope="row">{{ dividend.id }}</th>
+                <td>{{ dividend.stock.code }}</td>
+                <td>{{ dividend.dividende_value }}</td>
+                <td>{{ dividend.currency.code }}</td>
+                <td>{{ dividend.date }}</td>
+                <td>{{ dividend.updated_date_time }}</td>
+                <td><a class="fa fa-pencil" href="{% url 'edit_dividend' id=dividend.id %}"></a></td>
+                <td><a class="fa fa-trash" href="{% url 'delete_dividend' id=dividend.id %}"></a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>There are no dividends.</p>
+{% endif %}
+
+{% endblock %}

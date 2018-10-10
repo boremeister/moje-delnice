@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from . models import Currency, Stock, Tag, StockPrice, ExchangeRate
+from . models import Currency, Stock, Tag, StockPrice, ExchangeRate, Dividende
 from django.http import HttpResponse
-from . forms import StockForm, CurrencyForm, TagForm, StockPriceForm, ExchangeRateForm
+from . forms import StockForm, CurrencyForm, TagForm, StockPriceForm, ExchangeRateForm, DividendForm
 from django.shortcuts import redirect
 import datetime
 
@@ -62,6 +62,58 @@ def delete_stockprice(request, id = None):
         return redirect('stockprices')
     else:   
         return render(request, "stockprices/delete_stockprice.html", {'stockprice': stockprice})
+
+# dividends
+def dividends(request):
+
+    all_dividends = Dividende.objects.all()
+    context = {
+        'dividends_list': all_dividends
+    }
+
+    return render(request, "dividends/dividends.html", context)
+
+def add_dividend(request):
+
+    if request.method == "POST":
+        form = DividendForm(request.POST)
+        if form.is_valid():
+            dividend = form.save(commit=False)
+            dividend.created_by = request.user
+            dividend.save()
+            return redirect('dividends')
+    else:
+        # preset date field to current date
+        now = datetime.datetime.now()
+        form = DividendForm(initial={'date':now.strftime("%Y-%m-%d")})
+    
+    return render(request, "dividends/add_dividend.html", {'form': form})
+
+def edit_dividend(request, id = None):
+
+    dividend = get_object_or_404(Dividende, id = id)
+
+    if request.method == "POST":
+        form = DividendForm(request.POST, instance = dividend)
+        if form.is_valid():
+            dividend = form.save(commit=False)
+            #stockprice.created_by = request.user
+            dividend.save()
+            return redirect('dividends')
+    else:
+        form = DividendForm(instance = dividend)
+    
+    return render(request, "dividends/edit_dividend.html", {'form': form})
+
+def delete_dividend(request, id = None):
+
+    dividend = get_object_or_404(Dividende, id = id)
+
+    if request.method == "POST":
+        dividend.delete()
+        return redirect('dividends')
+    else:   
+        return render(request, "dividends/delete_dividend.html", {'dividend': dividend})
 
 # exchange rates
 def exchangerates(request):
