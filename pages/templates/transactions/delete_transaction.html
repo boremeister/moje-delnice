@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Delete transaction {% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col">
+  </div>
+  <div class="col-5">
+    <h1>Delete transaction</h1>
+    <br/>
+    <form method="post" novalidate> 
+      {% csrf_token %}
+      <p>Do you realy want to delete transaction for <i><strong>{{ transaction.stock }}</strong></i>
+      (quantity: <i>{{ transaction.quantity }}</i>, 
+      price: <i>{{ transaction.currency.code }} {{ transaction.price }}</i>) made on
+      <i><strong>{{ transaction.date }}</strong></i>?</p>
+      <br/>
+      <button type="submit" class="btn btn-danger">Delete</button>
+      <button onclick="window.history.back();" class="btn btn-default" type="button">Cancel</button>
+    </form>
+  </div>
+  <div class="col">
+  </div>
+</div> 
+
+{% endblock %}

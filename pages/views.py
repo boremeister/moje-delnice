@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from . models import Currency, Stock, Tag, StockPrice, ExchangeRate, Dividende
+from . models import Currency, Stock, Tag, StockPrice, ExchangeRate, Dividende, Transaction
 from django.http import HttpResponse
-from . forms import StockForm, CurrencyForm, TagForm, StockPriceForm, ExchangeRateForm, DividendForm
+from . forms import StockForm, CurrencyForm, TagForm, StockPriceForm, ExchangeRateForm, DividendForm, TransactionForm
 from django.shortcuts import redirect
 import datetime
 
@@ -168,7 +168,54 @@ def delete_exchangerate(request, id = None):
 
 # transactions
 def transactions(request):
-    return render(request, "transactions.html", {})
+
+    all_transactions = Transaction.objects.all()
+    context = {
+        'transactions_list': all_transactions
+    }
+
+    return render(request, "transactions/transactions.html", context)
+
+def add_transaction(request):
+
+    if request.method == "POST":
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            transaction = form.save(commit=False)
+            transaction.created_by = request.user
+            transaction.save()
+            return redirect('transactions')
+    else:
+        # preset date field to current date
+        now = datetime.datetime.now()
+        form = TransactionForm(initial={'date':now.strftime("%Y-%m-%d")})
+    
+    return render(request, "transactions/add_transaction.html", {'form': form})
+
+def edit_transaction(request, id = None):
+
+    transaction = get_object_or_404(Transaction, id = id)
+
+    if request.method == "POST":
+        form = TransactionForm(request.POST, instance = transaction)
+        if form.is_valid():
+            transaction = form.save(commit=False)
+            transaction.save()
+            return redirect('transactions')
+    else:
+        form = TransactionForm(instance = transaction)
+    
+    return render(request, "transactions/edit_transaction.html", {'form': form})
+
+def delete_transaction(request, id = None):
+
+    transaction = get_object_or_404(Transaction, id = id)
+
+    if request.method == "POST":
+        transaction.delete()
+        return redirect('transactions')
+    else:   
+        return render(request, "transactions/delete_transaction.html", {'transaction': transaction})
 
 # stocks
 def stocks(request):

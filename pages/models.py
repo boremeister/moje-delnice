@@ -129,4 +129,4 @@ class Transaction(models.Model):
 
       # show field in admin site
     def __str__(self):
-        return (self.transaction_type + " - " + self.stock + " - " + self.date.strftime('%Y-%m-%d'))
+        return (self.transaction_type + " - " + self.stock.code + " - " + self.date.strftime('%Y-%m-%d'))

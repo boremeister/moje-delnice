@@ -1,5 +1,5 @@
 from django import forms
-from . models import Tag, Stock, Currency, StockPrice, ExchangeRate, Dividende
+from . models import Tag, Stock, Currency, StockPrice, ExchangeRate, Dividende, Transaction
 
 class StockForm(forms.ModelForm):
 
@@ -36,3 +36,9 @@ class DividendForm(forms.ModelForm):
     class Meta:
         model = Dividende
         fields = ('stock', 'dividende_value', 'currency', 'date')
+
+class TransactionForm(forms.ModelForm):
+
+    class Meta:
+        model = Transaction
+        fields = ('transaction_type', 'stock', 'quantity', 'price', 'provision', 'currency', 'date', 'tag')
